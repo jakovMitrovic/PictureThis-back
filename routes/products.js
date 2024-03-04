@@ -1,11 +1,25 @@
 
 import express from "express";
-
+import  jwt  from "jsonwebtoken";
 
 import { Product } from '../models/Product.js';
 
 
 const router = express.Router();
+
+
+const verifyToken = (req, res, next) =>{
+    const token = req.headers.authorization;
+    console.log(req.headers)
+    if(token){
+        jwt.verify(token, "secret", (error)=>{
+            if(error) return res.sendStatus(403);
+            next();
+        })
+    } else{
+        res.sendStatus(401)
+        }
+    }
 
 
 router.post('/addProduct', async (req, res) => {
@@ -84,6 +98,20 @@ router.get('/allProducts', async (req, res) => {
     res.send(products)
 })
 
+
+router.put("/edit", verifyToken, async (req, res) => {
+    const _id  = req.body._id;
+    console.log(_id)
+   try {
+       const product = await Product.findOneAndUpdate({_id: _id}, req.body, )
+     
+       res.json({ message:"ok", success: true, })
+
+   } catch (error) {
+       res.json(error)
+   }
+
+})
 
 
 

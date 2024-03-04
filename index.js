@@ -6,11 +6,17 @@ import multer from "multer";
 import cors from "cors"
 import { mongoDBURL } from "./config.js";
 import {productsRouter} from './routes/products.js'
+import { userRouter } from "./routes/users.js";
+import { adminRouter } from "./routes/admins.js";
+import { blogPostsRouter } from "./routes/blogPosts.js";
+import cookieParser from 'cookie-parser';
+import bodyParser from 'body-parser';
 
 
 
-app.use(express.json());
+app.use(express.json({limit: '50mb'}));
 app.use(cors());
+
 
 
 ///database connection
@@ -32,6 +38,9 @@ app.listen(port, (err)=>{
 
 
 app.use('/products', productsRouter)
+app.use('/users', userRouter)
+app.use('/admins', adminRouter)
+app.use('/blogPosts', blogPostsRouter)
 
 
 
